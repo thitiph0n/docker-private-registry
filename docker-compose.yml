@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - privateRegistry
+    volumes:
+      - ./auth:/etc/nginx/conf.d
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  registry:
+    image: registry:2
+    container_name: registry
+    expose:
+      - 5000
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+    networks:
+      - privateRegistry
+    volumes:
+      - ./data:/data
+  
+networks:
+  privateRegistry:
+
